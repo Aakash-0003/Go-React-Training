@@ -39,13 +39,20 @@ func AddUser(user *models.User) *mongo.InsertOneResult {
 	return result
 }
 
-func FindUser(data *string, user *models.User) *models.User {
+func FindUserByMail(data *string, user *models.User) *models.User {
 	collection := Client.Database("HRManagement").Collection("users")
-	result := collection.FindOne(context.Background(), bson.M{"email": data}).Decode(&user)
-	fmt.Println("found ", result)
+	collection.FindOne(context.Background(), bson.M{"email": data}).Decode(&user)
+	fmt.Println("found ", user)
 	return user
 }
 
+/* func FindUserById(data *string, user *models.User) *models.User {
+	collection := Client.Database("HRManagement").Collection("users")
+	collection.FindOne(context.Background(), bson.M{"_id": data}).Decode(&user)
+	fmt.Println("found ", user)
+	return user
+}
+*/
 func ErrorHandling(err error) {
 	if err != nil {
 		log.Fatal(err)
