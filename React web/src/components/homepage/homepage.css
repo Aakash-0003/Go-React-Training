@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
+
+.homepage {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    box-shadow: 0 0 15px 5px grey;
+    background: white;
+    position: relative
+}
+
+.header {
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.clockButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    min-height: 25vh;
+    width: 25vw;
+
+}
+
+.clockComp {
+    margin: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* css for profile */
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+}
+
+.title {
+    color: grey;
+    font-size: 18px;
+}
+
+.profile {
+    position: absolute;
+    right: 5%;
+    top: 20%
+}

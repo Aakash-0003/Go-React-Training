@@ -131,3 +131,77 @@ func Logout(c *fiber.Ctx) error {
 		"message": "successfully logged out",
 	})
 }
+
+func AdminRoleUpdate(c *fiber.Ctx) error {
+	var data map[string]string
+	err := c.BodyParser(&data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("data: ", data)
+
+	userMail := data["email"]
+	role := data["role"]
+	if role != "admin" && role != "employee" {
+		c.Status(fiber.StatusNotFound)
+		return c.JSON(fiber.Map{
+			"message": "user not found",
+		})
+	}
+	var user models.User
+	result := database.UpdateRole(&userMail, &role, &user)
+
+	return c.JSON(result)
+}
+
+func AdminDelete(c *fiber.Ctx) error {
+	var data map[string]string
+	err := c.BodyParser(&data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("data: ", data)
+	userMail := data["email"]
+	var user models.User
+	result := database.DeleteUser(&userMail, &user)
+
+	return c.JSON(result)
+}
+
+func ClockIn(c *fiber.Ctx) error {
+	now := time.Now()
+	date := now.Format("01-02-2006")
+	clockInTime := now.Format("15:04:05")
+	cookie := c.Cookies("jwt") // to grab the cookie in the request body from current login user
+
+	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		fmt.Println("token : ", token)
+		return []byte(Secret), nil
+	})
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthenticated",
+		})
+	}
+	claims := token.Claims.(*jwt.StandardClaims)
+
+	var user models.User
+
+	fmt.Println("data: ", claims.Issuer)
+	database.FindUserByMail(&claims.Issuer, &user)
+	attendance := models.Attendance{
+		Username: user.Username,
+		Date:     date,
+		ClockIn:  clockInTime,
+		Role:     user.Role,
+	}
+
+	inserted := database.AddClockIn(&attendance)
+	return c.JSON(inserted)
+}
+
+/* func AdminUserData(c *fiber.Ctx) error {
+
+	return c.JSON(result)
+} */

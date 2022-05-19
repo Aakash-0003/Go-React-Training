@@ -45,14 +45,27 @@ func FindUserByMail(data *string, user *models.User) *models.User {
 	fmt.Println("found ", user)
 	return user
 }
-
-/* func FindUserById(data *string, user *models.User) *models.User {
+func UpdateRole(data *string, role *string, user *models.User) *mongo.UpdateResult {
 	collection := Client.Database("HRManagement").Collection("users")
-	collection.FindOne(context.Background(), bson.M{"_id": data}).Decode(&user)
-	fmt.Println("found ", user)
-	return user
+	result, err := collection.UpdateOne(context.Background(), bson.M{"email": data}, bson.M{"$set": bson.M{"role": role}})
+	ErrorHandling(err)
+	return result
 }
-*/
+func DeleteUser(data *string, user *models.User) *mongo.DeleteResult {
+	collection := Client.Database("HRManagement").Collection("users")
+	result, err := collection.DeleteOne(context.Background(), bson.M{"email": data})
+	ErrorHandling(err)
+	return result
+}
+func AddClockIn(attendance *models.Attendance) *mongo.InsertOneResult {
+	collection := Client.Database("HRManagement").Collection("attendance")
+	result, _ := collection.InsertOne(context.Background(), attendance)
+	fmt.Println("inserted: ", result)
+	return result
+
+}
+
+/* func UserData() */
 func ErrorHandling(err error) {
 	if err != nil {
 		log.Fatal(err)

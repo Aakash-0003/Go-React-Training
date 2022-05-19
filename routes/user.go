@@ -10,4 +10,7 @@ func RootSetup(app *fiber.App) {
 	app.Post("/login", controller.Login)
 	app.Get("/user", controller.User)
 	app.Post("/logout", controller.Logout)
+	app.Post("/role", controller.AdminRoleUpdate)
+	app.Post("/admindelete", controller.AdminDelete)
+	app.Get("/clockin", controller.ClockIn)
 }

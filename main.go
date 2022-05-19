@@ -10,6 +10,7 @@ import (
 func main() {
 	database.CreateConnection()
 	app := fiber.New()
+	app.Static("/", "./React web/public")
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 	}))
